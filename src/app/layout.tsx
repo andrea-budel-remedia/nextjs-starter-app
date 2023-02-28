@@ -1,11 +1,16 @@
 import './globals.css';
-import { Providers } from '@/utils/providers';
+import { AppProvider } from '@/utils/providers';
+import { getServerSession } from '@/modules/auth/auth.utils';
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  ...others
 }: {
   children: React.ReactNode;
 }) {
+  console.log('Root Layout', others);
+  const session = await getServerSession();
+
   return (
     <html lang="en">
       {/*
@@ -13,9 +18,9 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <Providers>
+      <AppProvider initialState={{ auth: session }}>
         <body>{children}</body>
-      </Providers>
+      </AppProvider>
     </html>
   );
 }

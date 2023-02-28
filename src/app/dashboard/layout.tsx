@@ -1,18 +1,20 @@
-import NavigationDrawer from '@/components/navigation/NavigationDrawer';
 import React, { PropsWithChildren } from 'react';
-import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
+import SidebarLayout from '@/components/layout/SidebarLayout';
+import Header from '@/components/layout/Header';
+import { getServerSession } from '@/modules/auth/auth.utils';
 
 export default async function DashboardLayout({ children }: PropsWithChildren) {
+  console.log('Dashboard Layout');
   const session = await getServerSession();
-  console.log(session);
+
   if (!session) {
-    redirect(`/api/auth/signin?callbackUrl=http://localhost:3000/dashboard`);
+    redirect(`/401?redirectTo=/dashboard`);
   }
+
   return (
-    <>
-      <NavigationDrawer />
-      <section>{children}</section>
-    </>
+    <div className="w-full">
+      <SidebarLayout headerSlot={<Header />}>{children}</SidebarLayout>
+    </div>
   );
 }
